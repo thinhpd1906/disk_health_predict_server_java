@@ -27,10 +27,10 @@ public interface AuthenticationService {
     ) throws IOException;
     String handleLoginSuccess(User user);
     boolean checkEmailExist(String email);
-    Optional<User> findByEmail(String email);
-    Integer getUserId();
+    Optional<User> findByEmail(String email);String
+     getUserId();
     User getUser();
-    String generateVerifyCode(int length);
-    String checkStatusAccount(String email);
-    void verifyCode(VerifyCodeRequest verifyCodeRequest);
+//    String generateVerifyCode(int length);
+//    String checkStatusAccount(String email);
+//    void verifyCode(VerifyCodeRequest verifyCodeRequest);
 }

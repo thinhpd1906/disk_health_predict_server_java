@@ -29,8 +29,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue
-    private Integer id;
+//    @GeneratedValue
+    private String id;
     private String fullName;
     private String email;
     @JsonIgnore
@@ -38,19 +38,19 @@ public class User implements UserDetails {
     //    private Date birthDay;
     @Enumerated(EnumType.STRING)
     private Role role;
-    @JsonIgnore
-    private Integer active;
+//    @JsonIgnore
+//    private Integer active;
     private Long createAt;
     private Long updateAt;
-    private String verifyCode;
+//    private String verifyCode;
     //    Status: 0: deleted, 1: Registered but not yet verify code, 2: ok
-    private String status;
-    private Long codeExpired;
+//    private String status;
+//    private Long codeExpired;
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
-    public Integer getId() {
-        return id;
-    }
+//    public String getId() {
+//        return id;
+//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

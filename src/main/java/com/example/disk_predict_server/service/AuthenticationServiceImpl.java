@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -37,11 +38,15 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
-
+    @Autowired
     private final UserRepository userRepository;
+    @Autowired
     private final TokenRepository tokenRepository;
+    @Autowired
     private final PasswordEncoder passwordEncoder;
+    @Autowired
     private final JwtService jwtService;
+    @Autowired
     private final AuthenticationManager authenticationManager;
 
     @Override
@@ -58,24 +63,24 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 //            }
 //        }
         try {
-            String verifyCode = generateVerifyCode(6);
-            RegisterRequest a = request;
+//            String verifyCode = generateVerifyCode(6);
             long now = System.currentTimeMillis();
             User user = User.builder()
+                    .id(request.getId())
                     .fullName(request.getFullName())
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
 //                    .birthDay(userBrithDay)
                     .role(roleUser)
-                    .status("1")
-                    .verifyCode(verifyCode)
-                    .codeExpired(now + 5*60*1000)
+//                    .status("1")
+//                    .verifyCode(verifyCode)
+//                    .codeExpired(now + 5*60*1000)
                     .createAt(now)
                     .updateAt(now)
                     .build();
             savedUser = userRepository.save(user);
         } catch (DataIntegrityViolationException ex){
-            DataIntegrityViolationException a = ex;
+//            DataIntegrityViolationException a = ex;
             return null;
         }
         return savedUser;
@@ -119,23 +124,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         try {
             // authenticate user using authenticationManager
 
-            authentication = authenticationManager
+            authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(email , password));
 
         } catch (BadCredentialsException ex) { //authenticate failed
             return null;
         }
-        var  user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow();
-        if (user == null) {
-            throw new InternalServerErrorException(ConstantMessages.MESSAGE_SOMETHING_WENT_WRONG);
-        }
+//        if (user == null) {
+//            throw new InternalServerErrorException(ConstantMessages.MESSAGE_SOMETHING_WENT_WRONG);
+//        }
         return user;
     }
 
     @Override
     public void saveUserToken(User user, String jwtToken) {
-        var token = Token.builder()
+        Token token = Token.builder()
                 .user(user)
                 .token(jwtToken)
                 .tokenType(TokenType.BEARER)
@@ -230,11 +235,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return userRepository.findByEmail(email);
     }
     @Override
-    public Integer getUserId() {
+    public String getUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
-        Integer userId = user.getId();
-        String id = userId.toString();
+        String userId = user.getId();
+        String id = userId;
         System.out.println("userId" +  id);
         return userId;
     }
@@ -245,55 +250,55 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return user;
     }
 
-    @Override
-    public String generateVerifyCode(int length) {
-// Dãy ký tự số từ '0' đến '9'
-        String digits = "0123456789";
+//    @Override
+//    public String generateVerifyCode(int length) {
+//// Dãy ký tự số từ '0' đến '9'
+//        String digits = "0123456789";
+//
+//        // Sử dụng StringBuilder để xây dựng chuỗi kết quả
+//        StringBuilder stringBuilder = new StringBuilder(length);
+//
+//        // Tạo đối tượng Random
+//        Random random = new Random();
+//
+//        // Tạo chuỗi ngẫu nhiên bằng cách chọn ngẫu nhiên các ký tự từ dãy số
+//        for (int i = 0; i < length; i++) {
+//            int randomIndex = random.nextInt(digits.length());
+//            char randomDigit = digits.charAt(randomIndex);
+//            stringBuilder.append(randomDigit);
+//        }
+//
+//        return stringBuilder.toString();
+//    }
 
-        // Sử dụng StringBuilder để xây dựng chuỗi kết quả
-        StringBuilder stringBuilder = new StringBuilder(length);
+//    public String checkStatusAccount(String email) {
+//        Optional<User> user = findByEmail(email);
+//        if(user.isPresent()) {
+//            String status = user.get().getStatus();
+//            if(status.equals("0")) {
+//                return "userDisabled";
+//            } else if(status.equals("1")) {
+//                return "userNotYetVerify";
+//            } else if(status.equals("2")) {
+//                return "userValid";
+//            }
+//        }
+//        return "userNotFound";
+//    }
 
-        // Tạo đối tượng Random
-        Random random = new Random();
-
-        // Tạo chuỗi ngẫu nhiên bằng cách chọn ngẫu nhiên các ký tự từ dãy số
-        for (int i = 0; i < length; i++) {
-            int randomIndex = random.nextInt(digits.length());
-            char randomDigit = digits.charAt(randomIndex);
-            stringBuilder.append(randomDigit);
-        }
-
-        return stringBuilder.toString();
-    }
-
-    public String checkStatusAccount(String email) {
-        Optional<User> user = findByEmail(email);
-        if(user.isPresent()) {
-            String status = user.get().getStatus();
-            if(status.equals("0")) {
-                return "userDisabled";
-            } else if(status.equals("1")) {
-                return "userNotYetVerify";
-            } else if(status.equals("2")) {
-                return "userValid";
-            }
-        }
-        return "userNotFound";
-    }
-
-    @Override
-    public void verifyCode(VerifyCodeRequest verifyCodeRequest) {
-        if(!checkEmailExist(verifyCodeRequest.getEmail())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "emailNotYetRegisted");
-        Optional<User> user = findByEmail(verifyCodeRequest.getEmail());
-        User userPresent;
-        if(user.isPresent()) {
-            userPresent = user.get();
-            if(!userPresent.getVerifyCode().equals(verifyCodeRequest.getVerifyCode())) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "verifyCodeWrong");
-            }
-            userPresent.setStatus("2");
-            userRepository.save(userPresent);
-        }
-
-    }
+//    @Override
+//    public void verifyCode(VerifyCodeRequest verifyCodeRequest) {
+//        if(!checkEmailExist(verifyCodeRequest.getEmail())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "emailNotYetRegisted");
+//        Optional<User> user = findByEmail(verifyCodeRequest.getEmail());
+//        User userPresent;
+//        if(user.isPresent()) {
+//            userPresent = user.get();
+//            if(!userPresent.getVerifyCode().equals(verifyCodeRequest.getVerifyCode())) {
+//                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "verifyCodeWrong");
+//            }
+//            userPresent.setStatus("2");
+//            userRepository.save(userPresent);
+//        }
+//
+//    }
 }

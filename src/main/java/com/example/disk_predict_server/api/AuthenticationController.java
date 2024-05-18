@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
     @Autowired
     private  EmailService emailService;
+    @Autowired
     private  AuthenticationService service;
     @Operation(
             description = "authentication ",
@@ -42,17 +43,23 @@ public class AuthenticationController {
             }
 
     )
-    @PostMapping("/register")
+    @PostMapping("/admin/register")
     public ResponseEntity<Object> register(
             @RequestBody RegisterRequest request
     ) {
         Map<String, Object> response = new HashMap<>();
         Map<String, Object> errors = new HashMap<>();
+        String id = request.getId();
         String email = request.getEmail();
         String password = request.getPassword();
         String fullName = request.getFullName();
 //        String birthDay = request.getBirthDay();
         String role = request.getRole();
+        if (id == null || StringUtils.isBlank(id)) {
+            errors.put(ConstantMessages.ID, ConstantMessages.ERROR_USER_ID_MUST_NOT_NULL);
+        } else {
+            id = id.trim();
+        }
         if(email== null|| StringUtils.isBlank(email)) {
             errors.put(ConstantMessages.EMAIL, ConstantMessages.ERROR_USER_EMAIL_MUST_NOT_NULL);
         }
@@ -104,7 +111,7 @@ public class AuthenticationController {
         try {
 //            Role roleNameConvertRole = Role.fromName(role);
 //            RegisterRequest newRegRquest = new RegisterRequest(fullName, email, password, birthDay, role);
-            RegisterRequest newRegRquest = new RegisterRequest(fullName, email, password,  role);
+            RegisterRequest newRegRquest = new RegisterRequest(id, fullName, email, password,  role);
             user = service.register(newRegRquest);
         } catch (Exception ex) {
             response.put(ConstantMessages.MESSAGE, ConstantMessages.MESSAGE_SOMETHING_WENT_WRONG);
@@ -113,9 +120,9 @@ public class AuthenticationController {
         if( user== null) {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        String code = user.getVerifyCode();
-        String emailUser = user.getEmail();
-        emailService.sendEmail(emailUser, "verify code", code);
+//        String code = user.getVerifyCode();
+//        String emailUser = user.getEmail();
+//        emailService.sendEmail(emailUser, "verify code", code);
         response.put(ConstantMessages.MESSAGE, ConstantMessages.MESSAGE_USER_REGISTER_SUCCESS);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -143,13 +150,13 @@ public class AuthenticationController {
             response.put(ConstantMessages.ERRORS, errors);
             return new ResponseEntity<>(new JSONObject(response), HttpStatus.BAD_REQUEST);
         }
-        String status = service.checkStatusAccount(email);
-        if(status != "userValid") {
-            response.put(ConstantMessages.MESSAGE, ConstantMessages.MESSAGE_INVALID_INPUT);
-            errors.put("cannotLogin", status);
-            response.put(ConstantMessages.ERRORS, errors);
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
+//        String status = service.checkStatusAccount(email);
+//        if(status != "userValid") {
+//            response.put(ConstantMessages.MESSAGE, ConstantMessages.MESSAGE_INVALID_INPUT);
+//            errors.put("cannotLogin", status);
+//            response.put(ConstantMessages.ERRORS, errors);
+//            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+//        }
         User user;
         try {
             user = service.authenticate(email, password);
@@ -164,7 +171,7 @@ public class AuthenticationController {
     }
     private Map<String, String> buildReturnedUser(User user) {
         Map<String, String> returnedUser = new HashMap<>();
-        returnedUser.put("id", Integer.toString(user.getId()));
+        returnedUser.put("id", user.getId());
         returnedUser.put("email", user.getEmail());
         returnedUser.put("role", user.getRole().getName());
         return returnedUser;
@@ -184,7 +191,7 @@ public class AuthenticationController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        response.put("accessToken", jwtToken);
+        response.put("access_token", jwtToken);
         response.put("user", this.buildReturnedUser(user));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

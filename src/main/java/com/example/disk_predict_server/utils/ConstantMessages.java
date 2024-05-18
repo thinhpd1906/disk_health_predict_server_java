@@ -3,6 +3,7 @@ package com.example.disk_predict_server.utils;
 public class ConstantMessages {
     public static final String MESSAGE_SOMETHING_WENT_WRONG = "SomethingWentWrong";
     public static String ERROR_CODE_GENERATE_PASSWORD = "401";
+    public static final String ID = "id";
     public static final String EMAIL = "email";
     public static final String PASSWORD = "password";
     public static final String NAME = "name";
@@ -19,6 +20,7 @@ public class ConstantMessages {
     public static final String MESSAGE_LOGIN_GOOGLE_SUCCESS = "LoginGoogleSuccess";
     public static final String MESSAGE_ADD_NOTI_SUCCESS = "AddNotiSuccess";
 
+    public static final String ERROR_USER_ID_MUST_NOT_NULL = "IdMustNotNull";
     public static final String ERROR_USER_EMAIL_MUST_NOT_NULL = "EmailMustNotNull";
     public static final String ERROR_USER_PASSWORD_MUST_NOT_NULL = "PasswordMustNotNull";
     public static final String ERROR_USER_EMAIL_EXISTED = "EmailExisted";

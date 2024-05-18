@@ -37,6 +37,8 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors()
+                .and()
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
@@ -58,6 +60,7 @@ public class SecurityConfiguration {
                         "/swagger-ui.html",
                         "/swagger-ui/index.html",
                         "/api/v1/test/**"
+//                        "/api/v1/smart/**"
 //                        "/api/v1/noti/**"
                 )
                 .permitAll()
@@ -66,6 +69,11 @@ public class SecurityConfiguration {
                 .requestMatchers(POST, "/api/v1/admin/**").hasAuthority(ADMIN_CREATE.name())
                 .requestMatchers(PUT, "/api/v1/admin/**").hasAuthority(ADMIN_UPDATE.name())
                 .requestMatchers(DELETE, "/api/v1/admin/**").hasAuthority(ADMIN_DELETE.name())
+                .requestMatchers("/api/v1/auth/admin/**").hasRole(ADMIN.name())
+                .requestMatchers(GET, "/api/v1/auth/admin/**").hasAuthority(ADMIN_READ.name())
+                .requestMatchers(POST, "/api/v1/auth/admin/**").hasAuthority(ADMIN_CREATE.name())
+                .requestMatchers(PUT, "/api/v1/auth/admin/**").hasAuthority(ADMIN_UPDATE.name())
+                .requestMatchers(DELETE, "/api/v1/auth/admin/**").hasAuthority(ADMIN_DELETE.name())
                 .anyRequest()
                 .authenticated()
                 .and()

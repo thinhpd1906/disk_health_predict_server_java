@@ -1,5 +1,6 @@
 package com.example.disk_predict_server.service;
 
+import com.example.disk_predict_server.persistence.token.Token;
 import com.example.disk_predict_server.persistence.token.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -8,6 +9,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +31,7 @@ public class LogoutService implements LogoutHandler {
             return;
         }
         jwt = authHeader.substring(7);
-        var storedToken = tokenRepository.findByToken(jwt)
+        Token storedToken = tokenRepository.findByToken(jwt)
                 .orElse(null);
         if (storedToken != null) {
             storedToken.setExpired(true);
@@ -36,5 +39,6 @@ public class LogoutService implements LogoutHandler {
             tokenRepository.save(storedToken);
             SecurityContextHolder.clearContext();
         }
+
     }
 }
