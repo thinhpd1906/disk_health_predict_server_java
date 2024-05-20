@@ -57,6 +57,8 @@ public class AuthenticationController {
         String role = request.getRole();
         if (id == null || StringUtils.isBlank(id)) {
             errors.put(ConstantMessages.ID, ConstantMessages.ERROR_USER_ID_MUST_NOT_NULL);
+        } else if(service.checkIdExist(id)) {
+            errors.put(ConstantMessages.ID, ConstantMessages.ID_USER_EMAIL_EXISTED);
         } else {
             id = id.trim();
         }
@@ -173,6 +175,7 @@ public class AuthenticationController {
         Map<String, String> returnedUser = new HashMap<>();
         returnedUser.put("id", user.getId());
         returnedUser.put("email", user.getEmail());
+        returnedUser.put("name", user.getFullName());
         returnedUser.put("role", user.getRole().getName());
         return returnedUser;
     }

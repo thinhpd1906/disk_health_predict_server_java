@@ -1,9 +1,6 @@
 spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/hard_drive_heath_predict
-    username: root
-    password: 1234
-    driver-class-name: com.mysql.cj.jdbc.Driver
+  profiles:
+    active: prod
   jpa:
     hibernate:
 #      ddl-auto: create

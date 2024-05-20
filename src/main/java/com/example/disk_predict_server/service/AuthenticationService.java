@@ -27,6 +27,7 @@ public interface AuthenticationService {
     ) throws IOException;
     String handleLoginSuccess(User user);
     boolean checkEmailExist(String email);
+    boolean checkIdExist(String id);
     Optional<User> findByEmail(String email);String
      getUserId();
     User getUser();

@@ -21,6 +21,7 @@ public class ConstantMessages {
     public static final String MESSAGE_ADD_NOTI_SUCCESS = "AddNotiSuccess";
 
     public static final String ERROR_USER_ID_MUST_NOT_NULL = "IdMustNotNull";
+    public static final String ID_USER_EMAIL_EXISTED = "IdExisted";
     public static final String ERROR_USER_EMAIL_MUST_NOT_NULL = "EmailMustNotNull";
     public static final String ERROR_USER_PASSWORD_MUST_NOT_NULL = "PasswordMustNotNull";
     public static final String ERROR_USER_EMAIL_EXISTED = "EmailExisted";

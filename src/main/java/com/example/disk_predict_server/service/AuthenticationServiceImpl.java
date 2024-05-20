@@ -230,6 +230,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public boolean checkEmailExist(String email) {
         return userRepository.existsByEmail(email);
     }
+    public boolean checkIdExist(String id) {
+        return userRepository.existsById(id);
+    }
     @Override
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
