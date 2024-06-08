@@ -1,5 +1,7 @@
 package com.example.disk_predict_server.api.dto;
 
+import com.example.disk_predict_server.api.dto.request.SmartInsertRequest;
+import com.example.disk_predict_server.api.dto.response.HardDriveOveral;
 import com.example.disk_predict_server.api.dto.response.SmartImportantResponse;
 import com.example.disk_predict_server.persistence.smart.SmartImportant;
 import com.example.disk_predict_server.service.SmartImportantService;
@@ -14,10 +16,7 @@ import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,15 +34,22 @@ public class SmartImportantController {
 //    SmartImportantController(SmartImportantService smartImportantService) {
 //        this.smartImportantService = smartImportantService;
 //    }
-
+    @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> addSmartImportant(@RequestBody SmartInsertRequest smartRequest) {
+        SmartInsertRequest a = smartRequest;
+        Map<String, String> response = new HashMap<>();
+        response = smartImportantService.addSmart(smartRequest);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
     @GetMapping(path = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getListNote(
             @RequestParam(required = false) String fromDate,
-            @RequestParam(required = false) String toDate
+            @RequestParam(required = false) String toDate,
+             @RequestParam(required = false) String serialNumber
     ) throws Exception {
         Map<String, Object> response = new HashMap<>();
-        List<SmartImportant> smartImportantList = smartImportantService.getListNote(fromDate, toDate);
+        List<SmartImportant> smartImportantList = smartImportantService.getListSmart(fromDate, toDate, serialNumber);
         List<SmartImportantResponse> noteResponses = smartImportantList.stream()
                 .map(smart -> {
                     SmartImportantResponse smartImportantResponse =
@@ -110,7 +116,7 @@ public class SmartImportantController {
     @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getAllSortPage(
             @RequestParam(defaultValue = "3") int size,
-            @RequestParam(defaultValue = "date,id") String[] sort,
+            @RequestParam(defaultValue = "serial_number,date,id") String[] sort,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(required = false) String date,
             @RequestParam(required = false) String fromDate,
@@ -154,4 +160,47 @@ public class SmartImportantController {
             return Sort.Direction.ASC;
         }
     }
+
+    @GetMapping(path = "/serial", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getSerialNumber() {
+        Map<String, Object> response = new HashMap<>();
+        List<String> serialNumbers = smartImportantService.getSerialNumber();
+        response.put("serialNumbers", serialNumbers);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping(path= "/overal", produces = MediaType.APPLICATION_JSON_VALUE)
+      public ResponseEntity<Object> getOveral() {
+        Map<String, Object> response = new HashMap<>();
+        List<SmartImportant> smartImportantList  = smartImportantService.getOveral();
+        List<HardDriveOveral> hardDriveOverals = smartImportantList.stream()
+                .map(smart -> {
+                    String timeLeft;
+                    switch(smart.getClass_prediction()) {
+                        case 0:
+                            timeLeft = "0 - 3 days";
+                            break;
+                        case 1:
+                            timeLeft = "4 - 7 days";
+                            break;
+                        case 2:
+                            timeLeft = "8 - 14 days";
+                            break;
+                        case 3:
+                            timeLeft = "> 14 days";
+                            break;
+                        default:
+                            timeLeft = "> 14 days";
+                    }
+                    HardDriveOveral hardDriveOveral = HardDriveOveral.builder()
+                            .serialNumber(smart.getSerial_number())
+                            .date(smart.getDate())
+                            .timeLeft(timeLeft)
+                            .build();
+                    return hardDriveOveral;
+                })
+                .collect(Collectors.toList());
+        response.put("data", hardDriveOverals);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 }

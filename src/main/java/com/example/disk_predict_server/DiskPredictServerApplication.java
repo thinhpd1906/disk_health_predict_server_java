@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 @SpringBootApplication
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "*")
 public class DiskPredictServerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(DiskPredictServerApplication.class, args);

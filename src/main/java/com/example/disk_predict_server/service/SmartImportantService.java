@@ -1,5 +1,7 @@
 package com.example.disk_predict_server.service;
 
+import com.example.disk_predict_server.api.dto.request.SmartInsertRequest;
+import com.example.disk_predict_server.api.dto.response.HardDriveOveral;
 import com.example.disk_predict_server.persistence.smart.SmartImportant;
 import com.example.disk_predict_server.persistence.smart.SmartImportantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +28,13 @@ public class SmartImportantService {
         this.authenticationService = authenticationService;
         this.smartImportantRepo = smartImportantRepo;
     }
-    public List<SmartImportant> getListNote(String fromDate, String toDate) {
+    public List<SmartImportant> getListSmart(String fromDate, String toDate, String serialNumber) {
         String userId = authenticationService.getUserId();
         String from = fromDate != null ? LocalDate.parse(fromDate, DateTimeFormatter.ISO_DATE).atStartOfDay().format(dateFormatter) : null;
         String to = toDate != null ? LocalDate.parse(toDate, DateTimeFormatter.ISO_DATE).atTime(23, 59).format(dateFormatter) : null;
         Map<String, Object> resInfo = new HashMap<>();
         List<SmartImportant> resList;
-        resList = smartImportantRepo.getListSerialNumber(userId, from, to);
+        resList = smartImportantRepo.getListBySerialNumber(userId, from, to, serialNumber);
         return resList;
     }
 
@@ -51,5 +53,34 @@ public class SmartImportantService {
         return smartImportantRepo.findByDateRange(userId, date, from, to, pageable);
     }
 
+    public Map<String, String> addSmart(SmartInsertRequest smartImportant) {
+        Map<String, String> res = new HashMap<>();
+        String userId = authenticationService.getUserId();
+        SmartImportant smart = SmartImportant.builder()
+                .user_id(userId)
+                .power_on_hours(smartImportant.getPower_on_hours())
+                .power_cycle(smartImportant.getPower_cycle())
+                .unsafe_shutdowns(smartImportant.getUnsafe_shutdowns())
+                .temperature(smartImportant.getTemperature())
+                .read_error_rate(smartImportant.getRead_error_rate())
+                .serial_number(smartImportant.getSerial_number())
+                .class_prediction(smartImportant.getClass_prediction())
+                .date(smartImportant.getDate())
+                .build();
+        smartImportantRepo.save(smart);
+        res.put("message", "success");
+        return res;
+    }
+
+
+    public List<String> getSerialNumber() {
+        List<String> serialNumbers = smartImportantRepo.getSerrialNumber();
+        return serialNumbers;
+    }
+
+    public List<SmartImportant> getOveral() {
+        String userId = authenticationService.getUserId();
+        return smartImportantRepo.getOveral(userId);
+    }
 
 }
