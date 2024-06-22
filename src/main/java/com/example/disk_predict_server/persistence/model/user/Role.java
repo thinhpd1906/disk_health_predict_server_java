@@ -1,4 +1,4 @@
-package com.example.disk_predict_server.persistence.user;
+package com.example.disk_predict_server.persistence.model.user;
 
 
 import lombok.Getter;
@@ -10,11 +10,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.example.disk_predict_server.persistence.user.Permission.ADMIN_CREATE;
-import static com.example.disk_predict_server.persistence.user.Permission.ADMIN_DELETE;
-import static com.example.disk_predict_server.persistence.user.Permission.ADMIN_READ;
-import static com.example.disk_predict_server.persistence.user.Permission.ADMIN_UPDATE;
-
 
 @RequiredArgsConstructor
 public enum Role {
@@ -22,10 +17,10 @@ public enum Role {
     USER(Collections.emptySet()),
     ADMIN(
             Set.of(
-                    ADMIN_READ,
-                    ADMIN_UPDATE,
-                    ADMIN_DELETE,
-                    ADMIN_CREATE
+                    Permission.ADMIN_READ,
+                    Permission.ADMIN_UPDATE,
+                    Permission.ADMIN_DELETE,
+                    Permission.ADMIN_CREATE
             )
     )
     ;

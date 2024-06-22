@@ -1,7 +1,6 @@
-package com.example.disk_predict_server.persistence.smart;
+package com.example.disk_predict_server.persistence.model.smart;
 
 
-import com.example.disk_predict_server.persistence.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 

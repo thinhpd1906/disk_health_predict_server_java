@@ -2,7 +2,7 @@ package com.example.disk_predict_server.api;
 
 import com.example.disk_predict_server.api.dto.request.AuthenticationRequest;
 import com.example.disk_predict_server.api.dto.request.RegisterRequest;
-import com.example.disk_predict_server.persistence.user.User;
+import com.example.disk_predict_server.persistence.model.user.User;
 import com.example.disk_predict_server.service.AuthenticationService;
 import com.example.disk_predict_server.service.EmailService;
 import com.example.disk_predict_server.utils.ConstantMessages;
@@ -28,8 +28,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name="Authentication")
 @RequiredArgsConstructor
 public class AuthenticationController {
-    @Autowired
-    private  EmailService emailService;
+//    @Autowired
+//    private  EmailService emailService;
     @Autowired
     private  AuthenticationService service;
     @Operation(

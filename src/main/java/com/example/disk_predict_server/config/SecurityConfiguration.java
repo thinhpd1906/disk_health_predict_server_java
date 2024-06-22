@@ -18,8 +18,8 @@ import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpMethod.PUT;
 
-import static com.example.disk_predict_server.persistence.user.Permission.*;
-import static com.example.disk_predict_server.persistence.user.Role.ADMIN;
+import static com.example.disk_predict_server.persistence.model.user.Permission.*;
+import static com.example.disk_predict_server.persistence.model.user.Role.ADMIN;
 
 @Configuration
 @EnableWebSecurity

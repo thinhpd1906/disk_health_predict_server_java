@@ -1,16 +1,14 @@
 package com.example.disk_predict_server.service;
 
 import com.example.disk_predict_server.api.dto.request.SmartInsertRequest;
-import com.example.disk_predict_server.api.dto.response.HardDriveOveral;
-import com.example.disk_predict_server.persistence.smart.SmartImportant;
-import com.example.disk_predict_server.persistence.smart.SmartImportantRepository;
+import com.example.disk_predict_server.persistence.model.smart.SmartImportant;
+import com.example.disk_predict_server.persistence.model.smart.SmartImportantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;

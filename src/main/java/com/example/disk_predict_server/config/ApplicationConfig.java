@@ -1,6 +1,6 @@
 package com.example.disk_predict_server.config;
 
-import com.example.disk_predict_server.persistence.user.UserRepository;
+import com.example.disk_predict_server.persistence.model.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

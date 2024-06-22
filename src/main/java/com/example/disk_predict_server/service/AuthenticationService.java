@@ -1,7 +1,6 @@
 package com.example.disk_predict_server.service;
 import com.example.disk_predict_server.api.dto.request.RegisterRequest;
-import com.example.disk_predict_server.api.dto.request.VerifyCodeRequest;
-import com.example.disk_predict_server.persistence.user.User;
+import com.example.disk_predict_server.persistence.model.user.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 

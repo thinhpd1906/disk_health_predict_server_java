@@ -1,13 +1,12 @@
 package com.example.disk_predict_server.service;
 import com.example.disk_predict_server.api.dto.request.RegisterRequest;
-import com.example.disk_predict_server.api.dto.request.VerifyCodeRequest;
 import com.example.disk_predict_server.api.dto.response.AuthenticationResponse;
-import com.example.disk_predict_server.persistence.token.Token;
-import com.example.disk_predict_server.persistence.token.TokenRepository;
-import com.example.disk_predict_server.persistence.token.TokenType;
-import com.example.disk_predict_server.persistence.user.Role;
-import com.example.disk_predict_server.persistence.user.User;
-import com.example.disk_predict_server.persistence.user.UserRepository;
+import com.example.disk_predict_server.persistence.model.token.Token;
+import com.example.disk_predict_server.persistence.model.token.TokenRepository;
+import com.example.disk_predict_server.persistence.model.token.TokenType;
+import com.example.disk_predict_server.persistence.model.user.Role;
+import com.example.disk_predict_server.persistence.model.user.User;
+import com.example.disk_predict_server.persistence.model.user.UserRepository;
 import com.example.disk_predict_server.utils.ConstantMessages;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
@@ -19,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,7 +25,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.ws.rs.InternalServerErrorException;
 

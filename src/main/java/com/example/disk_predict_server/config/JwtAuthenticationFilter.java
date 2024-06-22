@@ -1,5 +1,5 @@
 package com.example.disk_predict_server.config;
-import com.example.disk_predict_server.persistence.token.TokenRepository;
+import com.example.disk_predict_server.persistence.model.token.TokenRepository;
 import com.example.disk_predict_server.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.filter.OncePerRequestFilter;

@@ -1,4 +1,4 @@
-package com.example.disk_predict_server.persistence.user;
+package com.example.disk_predict_server.persistence.model.user;
 
 import ch.qos.logback.core.net.SyslogOutputStream;
 import lombok.Getter;

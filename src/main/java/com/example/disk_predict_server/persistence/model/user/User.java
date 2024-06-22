@@ -1,12 +1,11 @@
-package com.example.disk_predict_server.persistence.user;
+package com.example.disk_predict_server.persistence.model.user;
 
 
-import com.example.disk_predict_server.persistence.token.Token;
+import com.example.disk_predict_server.persistence.model.token.Token;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;

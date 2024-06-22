@@ -1,13 +1,13 @@
-package com.example.disk_predict_server.api.dto;
+package com.example.disk_predict_server.api;
 
 import com.example.disk_predict_server.api.dto.request.SmartInsertRequest;
 import com.example.disk_predict_server.api.dto.response.HardDriveOveral;
 import com.example.disk_predict_server.api.dto.response.SmartImportantResponse;
-import com.example.disk_predict_server.persistence.smart.SmartImportant;
+import com.example.disk_predict_server.api.dto.response.SmartImportantSortResponse;
+import com.example.disk_predict_server.persistence.model.smart.SmartImportant;
 import com.example.disk_predict_server.service.SmartImportantService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -43,7 +43,7 @@ public class SmartImportantController {
     }
 
     @GetMapping(path = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getListNote(
+    public ResponseEntity<Object> getListBySerialNum(
             @RequestParam(required = false) String fromDate,
             @RequestParam(required = false) String toDate,
              @RequestParam(required = false) String serialNumber
@@ -115,7 +115,7 @@ public class SmartImportantController {
 
     @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getAllSortPage(
-            @RequestParam(defaultValue = "3") int size,
+            @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "serial_number,date,id") String[] sort,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(required = false) String date,
@@ -138,12 +138,48 @@ public class SmartImportantController {
             Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
             Page<SmartImportant> pageTuts = smartImportantService.getAllSortPage(date, fromDate, toDate, pagingSort);
             List<SmartImportant> smartList = pageTuts.getContent();
+            List<SmartImportantSortResponse> smartImportantList = smartList.stream()
+                    .map(smart -> {
+                        String timeLeft;
+                        switch(smart.getClass_prediction()) {
+                            case 0:
+                                timeLeft = "0 - 3 days";
+                                break;
+                            case 1:
+                                timeLeft = "4 - 7 days";
+                                break;
+                            case 2:
+                                timeLeft = "8 - 14 days";
+                                break;
+                            case 3:
+                                timeLeft = "> 14 days";
+                                break;
+                            default:
+                                timeLeft = "> 14 days";
+                        }
+                        SmartImportantSortResponse smartImportantResponse =
+                                SmartImportantSortResponse.builder()
+                                        .id(smart.getId())
+                                        .power_on_hours(smart.getPower_on_hours())
+                                        .power_cycle(smart.getPower_cycle())
+                                        .unsafe_shutdowns(smart.getUnsafe_shutdowns())
+                                        .temperature(smart.getTemperature())
+                                        .read_error_rate(smart.getRead_error_rate())
+                                        .date(smart.getDate())
+                                        .serial_number(smart.getSerial_number())
+                                        .time_left_prediction(timeLeft)
+                                        .build();
+                        // Đặt các trường của notiResponse dựa trên các trường của notification
+                        // Ví dụ: notiResponse.setSomeField(notification.getSomeField());
+                        return smartImportantResponse;
+                    })
+                    .collect(Collectors.toList());
 //            if (smartList.isEmpty()) {
 //                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 //            }
 
             Map<String, Object> response = new HashMap<>();
-            response.put("smartList", smartList);
+            response.put("smartList", smartImportantList);
             response.put("currentPage", pageTuts.getNumber());
             response.put("totalItems", pageTuts.getTotalElements());
             response.put("totalPages", pageTuts.getTotalPages());

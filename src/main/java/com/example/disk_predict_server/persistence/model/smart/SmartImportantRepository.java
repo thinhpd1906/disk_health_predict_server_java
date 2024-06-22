@@ -1,5 +1,4 @@
-package com.example.disk_predict_server.persistence.smart;
-import com.example.disk_predict_server.api.dto.response.HardDriveOveral;
+package com.example.disk_predict_server.persistence.model.smart;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -42,6 +41,6 @@ public interface SmartImportantRepository extends JpaRepository<SmartImportant, 
             "INNER JOIN (SELECT serial_number, MAX(date) AS max_date FROM smart_important WHERE user_id = :user_id GROUP BY serial_number) s2 " +
             "ON s1.serial_number = s2.serial_number AND s1.date = s2.max_date " +
             "WHERE s1.user_id = :user_id", nativeQuery = true)
-    List<SmartImportant> getOveral(String user_id );
+        List<SmartImportant> getOveral(String user_id );
 
 }

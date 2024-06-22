@@ -1,4 +1,4 @@
-package com.example.disk_predict_server.persistence.token;
+package com.example.disk_predict_server.persistence.model.token;
 
 import java.util.List;
 import java.util.Optional;

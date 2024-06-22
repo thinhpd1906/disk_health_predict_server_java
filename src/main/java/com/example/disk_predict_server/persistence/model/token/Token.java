@@ -1,7 +1,7 @@
-package com.example.disk_predict_server.persistence.token;
+package com.example.disk_predict_server.persistence.model.token;
 
 
-import com.example.disk_predict_server.persistence.user.User;
+import com.example.disk_predict_server.persistence.model.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
