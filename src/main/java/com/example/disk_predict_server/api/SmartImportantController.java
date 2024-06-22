@@ -46,7 +46,7 @@ public class SmartImportantController {
     public ResponseEntity<Object> getListBySerialNum(
             @RequestParam(required = false) String fromDate,
             @RequestParam(required = false) String toDate,
-             @RequestParam(required = false) String serialNumber
+            @RequestParam(required = false) String serialNumber
     ) throws Exception {
         Map<String, Object> response = new HashMap<>();
         List<SmartImportant> smartImportantList = smartImportantService.getListSmart(fromDate, toDate, serialNumber);
@@ -143,19 +143,19 @@ public class SmartImportantController {
                         String timeLeft;
                         switch(smart.getClass_prediction()) {
                             case 0:
-                                timeLeft = "0 - 3 days";
+                                timeLeft = "0 - 13 days";
                                 break;
                             case 1:
-                                timeLeft = "4 - 7 days";
+                                timeLeft = "14 - 28 days";
                                 break;
-                            case 2:
-                                timeLeft = "8 - 14 days";
-                                break;
-                            case 3:
-                                timeLeft = "> 14 days";
-                                break;
+//                            case 2:
+//                                timeLeft = "8 - 14 days";
+//                                break;
+//                            case 3:
+//                                timeLeft = "> 14 days";
+//                                break;
                             default:
-                                timeLeft = "> 14 days";
+                                timeLeft = "> 28 days";
                         }
                         SmartImportantSortResponse smartImportantResponse =
                                 SmartImportantSortResponse.builder()
@@ -213,19 +213,19 @@ public class SmartImportantController {
                     String timeLeft;
                     switch(smart.getClass_prediction()) {
                         case 0:
-                            timeLeft = "0 - 3 days";
+                            timeLeft = "0 - 13 days";
                             break;
                         case 1:
-                            timeLeft = "4 - 7 days";
+                            timeLeft = "14 - 28 days";
                             break;
-                        case 2:
-                            timeLeft = "8 - 14 days";
-                            break;
-                        case 3:
-                            timeLeft = "> 14 days";
-                            break;
+//                        case 2:
+//                            timeLeft = "8 - 14 days";
+//                            break;
+//                        case 3:
+//                            timeLeft = "> 14 days";
+//                            break;
                         default:
-                            timeLeft = "> 14 days";
+                            timeLeft = "> 28 days";
                     }
                     HardDriveOveral hardDriveOveral = HardDriveOveral.builder()
                             .serialNumber(smart.getSerial_number())
